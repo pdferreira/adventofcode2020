@@ -15,8 +15,9 @@ def read_file(input_file):
         return [int(line) for line in f.readlines()]
 
 def find_triple(num_array, expected_sum):
-    for num in num_array:
-        pair = find_pair(num_array[1:], expected_sum - num)
+    for idx, num in enumerate(num_array):
+        sub_array = num_array[(idx + 1):]
+        pair = find_pair(sub_array, expected_sum - num)
         if pair != None:
             return (num,) + pair
 
