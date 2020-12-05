@@ -1,10 +1,12 @@
+import re
+
 def parse_seat_coords(input_file):
     with open(input_file) as f:
         return [
             parse_seat_coord(coord_code)
             for coord_code
             in f.readlines()]
-
+        
 def parse_seat_coord(coord_code):
     return {
         'row': row_code_to_number(coord_code[:7]),
@@ -22,11 +24,8 @@ def col_code_to_number(col_code):
 def calculate_seat_id(seat_coord):
     return seat_coord['row'] * 8 + seat_coord['col']
 
-def max_seat_id(seat_coords):
-    return max([calculate_seat_id(c) for c in seat_coords])
-
-def find_empty_seat(seat_coords):
-    sorted_seats = sorted([calculate_seat_id(c) for c in seat_coords])
+def find_empty_seat(seat_ids):
+    sorted_seats = sorted(seat_ids)
     prev_seat_id = sorted_seats[0]
     for seat_id in sorted_seats[1:]:
         if seat_id - prev_seat_id > 1:
@@ -37,10 +36,29 @@ def find_empty_seat(seat_coords):
 def solve(input_file):
     print(f'[{input_file}]')
     seat_coords = parse_seat_coords(input_file)
-    print('Part 1 answer:', max_seat_id(seat_coords))
-    print('Part 2 answer:', find_empty_seat(seat_coords))
+    seat_ids = [calculate_seat_id(c) for c in seat_coords]
+    print('Part 1 answer:', max(seat_ids))
+    print('Part 2 answer:', find_empty_seat(seat_ids))
+    print()
+
+def parse_seat_ids(input_file):
+    # seat_id can be taken directly by parsing the full coordinate as binary
+    with open(input_file) as f:
+        binary_coords = re.sub(
+            r'\w',
+            lambda m: '0' if m.group(0) in ['F', 'L'] else '1',
+            f.read())
+        return [int(c, 2) for c in binary_coords.splitlines()]
+
+def solve_take2(input_file):
+    print(f'[{input_file}] v2')
+    seat_ids = parse_seat_ids(input_file)
+    print('Part 1 answer:', max(seat_ids))
+    print('Part 2 answer:', find_empty_seat(seat_ids))
     print()
 
 if __name__ == '__main__':
     solve('example.txt')
     solve('input.txt')
+    solve_take2('example.txt')
+    solve_take2('input.txt')
