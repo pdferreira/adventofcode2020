@@ -1,7 +1,9 @@
 from functools import reduce
+from os import path
 
 def parse_file(input_file):
-    with open(input_file) as f:
+    full_path = path.join(path.dirname(__file__), input_file)
+    with open(full_path) as f:
         return f.read().splitlines()
         
 def is_tree(tile):

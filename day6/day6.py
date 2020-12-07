@@ -1,5 +1,6 @@
 from itertools import chain
 from functools import reduce
+from os import path
 
 def parse_answer_groups(input_file):
     with open(input_file) as f:
@@ -18,7 +19,8 @@ def get_common_answers(answer_group):
 
 def solve(input_file):
     print(f'[{input_file}]')
-    answer_groups = parse_answer_groups(input_file)
+    full_path = path.join(path.dirname(__file__), input_file)
+    answer_groups = parse_answer_groups(full_path)
     print('Part 1 answer:', sum([len(get_unique_answers(g)) for g in answer_groups]))
     print('Part 2 answer:', sum([len(get_common_answers(g)) for g in answer_groups]))
     print()

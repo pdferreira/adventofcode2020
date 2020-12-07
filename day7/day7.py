@@ -1,4 +1,5 @@
 from functools import reduce
+from os import path
 import re
 
 BAG_REGEX = re.compile(r'(\d+) (\w+ \w+) bags?')
@@ -58,7 +59,8 @@ def count_sub_bags_of(bag_type: str, rule_map: dict[str, list[SubBag]]) -> int:
 
 def solve(input_file: str) -> None:
     print(f'[{input_file}]')
-    rules = parse_rules(input_file)
+    full_path = path.join(path.dirname(__file__), input_file)
+    rules = parse_rules(full_path)
     rule_map = dict(rules)
     irule_map = create_inverted_rule_map(rules)
     print('Part 1 answer:', len(get_super_bags_of('shiny gold', irule_map)))

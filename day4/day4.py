@@ -1,3 +1,4 @@
+from os import path
 import re
 
 FIELD_REGEX = re.compile(r'(\w{3}):(\S+)')
@@ -74,7 +75,8 @@ def count_valid_passports(passport_texts, deep_validation):
 
 def solve(input_file):
     print(f'[{input_file}]')
-    passport_texts = parse_passports(input_file)
+    full_path = path.join(path.dirname(__file__), input_file)
+    passport_texts = parse_passports(full_path)
     print('Part 1 answer:', count_valid_passports(passport_texts, deep_validation = False))
     print('Part 2 answer:', count_valid_passports(passport_texts, deep_validation = True))
     print()
