@@ -23,7 +23,9 @@ def parse_rule(rule_text: str) -> Rule:
 
 def parse_bag(bag_text: str) -> SubBag:
     match = BAG_REGEX.fullmatch(bag_text)
-    if match is not None:
+    if match is None:
+        raise Exception(f'Unexpected bag text: {bag_text}')
+    else:
         return int(match.group(1)), match.group(2)
 
 def create_inverted_rule_map(rules: list[Rule]) -> dict[str, set[str]]:
@@ -40,7 +42,7 @@ def create_inverted_rule_map(rules: list[Rule]) -> dict[str, set[str]]:
 def get_super_bags_of(bag_type: str, irule_map: dict[str, set[str]]) -> set[str]:
     if bag_type in irule_map:
         super_bags = irule_map[bag_type]
-        return super_bags | reduce(lambda acc, b: acc | get_super_bags_of(b, irule_map), super_bags, set())
+        return super_bags | reduce(lambda acc, b: acc | get_super_bags_of(b, irule_map), super_bags, set[str]())
     else:
         return set()
 
