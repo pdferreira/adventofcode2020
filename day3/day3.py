@@ -1,15 +1,15 @@
 from functools import reduce
 from os import path
 
-def parse_file(input_file):
+def parse_file(input_file: str) -> list[str]:
     full_path = path.join(path.dirname(__file__), input_file)
     with open(full_path) as f:
         return f.read().splitlines()
         
-def is_tree(tile):
+def is_tree(tile: str) -> bool:
     return tile == '#'
 
-def count_trees_on_slope(travel_map, dx, dy, x=0, y=0):
+def count_trees_on_slope(travel_map: list[str], dx: int, dy: int, x = 0, y = 0) -> int:
     if travel_map == []:
         return 0
 
@@ -21,7 +21,7 @@ def count_trees_on_slope(travel_map, dx, dy, x=0, y=0):
     
     return top_trees + rest_trees
 
-def multiply_tree_counts(travel_map, slopes):
+def multiply_tree_counts(travel_map: list[str], slopes: list[tuple[int, int]]):
     tree_counts = [count_trees_on_slope(travel_map, dx, dy) for dx, dy in slopes]
     return reduce(lambda a, b: a * b, tree_counts)
 

@@ -9,23 +9,23 @@ PASSPORT_ID_REGEX = re.compile(r'\d{9}')
 MANDATORY_FIELDS = {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}
 EYE_COLORS = {'amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'}
 
-def parse_passports(input_file):
+def parse_passports(input_file: str) -> list[str]:
     with open(input_file) as f:
         return [
             passport_text
             for passport_text
             in f.read().split('\n\n')]
 
-def parse_fields(passport_text):
+def parse_fields(passport_text: str) -> dict[str, str]:
     return dict(FIELD_REGEX.findall(passport_text))
 
-def validate_year(year_text, min, max):
+def validate_year(year_text: str, min: int, max: int) -> bool:
     try:
         return min <= int(year_text) <= max
     except ValueError:
         return False
 
-def validate_height(height_text):
+def validate_height(height_text: str):
     height_match = HEIGHT_REGEX.fullmatch(height_text)
     if height_match:
         height = int(height_match.group(1))
@@ -37,16 +37,16 @@ def validate_height(height_text):
 
     return False
 
-def validate_color(color_text):
+def validate_color(color_text: str):
     return COLOR_REGEX.fullmatch(color_text) is not None
 
-def validate_eye_color(color_text):
+def validate_eye_color(color_text: str):
     return color_text in EYE_COLORS
 
-def validate_passport_id(id_text):
+def validate_passport_id(id_text: str):
     return PASSPORT_ID_REGEX.fullmatch(id_text) is not None
 
-def is_valid_passport(passport_text, deep_validation):
+def is_valid_passport(passport_text: str, deep_validation: bool):
     pp_fields = parse_fields(passport_text)
 
     if not MANDATORY_FIELDS <= set(pp_fields):
@@ -65,7 +65,7 @@ def is_valid_passport(passport_text, deep_validation):
 
     return True
 
-def count_valid_passports(passport_texts, deep_validation):
+def count_valid_passports(passport_texts: list[str], deep_validation: bool):
     return len([
         pp_text
         for pp_text
@@ -73,7 +73,7 @@ def count_valid_passports(passport_texts, deep_validation):
         if is_valid_passport(pp_text, deep_validation)
     ])
 
-def solve(input_file):
+def solve(input_file: str):
     print(f'[{input_file}]')
     full_path = path.join(path.dirname(__file__), input_file)
     passport_texts = parse_passports(full_path)
