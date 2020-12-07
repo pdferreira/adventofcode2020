@@ -1,3 +1,5 @@
+from os import path
+
 def parse_policy(input_line):
     (policy, _, password) = input_line.partition(': ')
     (prange, _, pletter) = policy.partition(' ')
@@ -6,7 +8,8 @@ def parse_policy(input_line):
 
 
 def parse_file(input_file):
-    with open(input_file) as f:
+    full_path = path.join(path.dirname(__file__), input_file)
+    with open(full_path) as f:
         return [parse_policy(line) for line in f.readlines()]
         
 def validate_policy_part1(minOccur, maxOccur, letter, password):

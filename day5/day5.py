@@ -1,3 +1,4 @@
+from os import path
 import re
 
 def parse_seat_coords(input_file):
@@ -35,7 +36,8 @@ def find_empty_seat(seat_ids):
 
 def solve(input_file):
     print(f'[{input_file}]')
-    seat_coords = parse_seat_coords(input_file)
+    full_path = path.join(path.dirname(__file__), input_file)
+    seat_coords = parse_seat_coords(full_path)
     seat_ids = [calculate_seat_id(c) for c in seat_coords]
     print('Part 1 answer:', max(seat_ids))
     print('Part 2 answer:', find_empty_seat(seat_ids))
@@ -52,7 +54,8 @@ def parse_seat_ids(input_file):
 
 def solve_take2(input_file):
     print(f'[{input_file}] v2')
-    seat_ids = parse_seat_ids(input_file)
+    full_path = path.join(path.dirname(__file__), input_file)
+    seat_ids = parse_seat_ids(full_path)
     print('Part 1 answer:', max(seat_ids))
     print('Part 2 answer:', find_empty_seat(seat_ids))
     print()

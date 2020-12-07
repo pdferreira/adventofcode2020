@@ -1,3 +1,5 @@
+from os import path
+
 def find_pair(num_array, expected_sum):
     expected_nums = set()
     for num in num_array:
@@ -11,7 +13,8 @@ def solve_part1(num_array, expected_sum):
     return a * b
 
 def read_file(input_file):
-    with open(input_file) as f:
+    full_path = path.join(path.dirname(__file__), input_file)
+    with open(full_path) as f:
         return [int(line) for line in f.readlines()]
 
 def find_triple(num_array, expected_sum):
