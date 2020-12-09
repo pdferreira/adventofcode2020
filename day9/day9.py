@@ -60,7 +60,7 @@ def find_contiguous_sum_it(xmas_ns: list[int], expected_sum: int) -> Optional[li
 
         elif curr_sum > expected_sum and curr_sum_ns != []:
             # if we are above, remove the oldest number
-            oldest_n, *curr_sum_ns = curr_sum_ns
+            oldest_n = curr_sum_ns.pop(0)
             curr_sum -= oldest_n
 
         else:
