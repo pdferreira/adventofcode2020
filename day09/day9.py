@@ -1,4 +1,4 @@
-from os import path, environ
+from os import path
 from typing import Optional
 import day01.day1 as day1
 
