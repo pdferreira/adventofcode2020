@@ -1,25 +1,17 @@
-from os import path
+from os import path, environ
 from typing import Optional
+import day01.day1 as day1
 
 def parse_xmas_numbers(input_file: str) -> list[int]:
     with open(input_file) as f:
         return [int(n) for n in f.readlines()]
-
-# from day1
-def find_pair(num_array: list[int], expected_sum: int) -> Optional[tuple[int, int]]:
-    expected_nums = set()
-    for num in num_array:
-        if num in expected_nums:
-            return (num, expected_sum - num)
-        else:
-            expected_nums.add(expected_sum - num)
 
 def find_invalid_number(xmas_ns: list[int], window_size: int) -> Optional[int]:
     if len(xmas_ns) <= window_size:
         return None
     else:
         num_to_validate = xmas_ns[window_size]
-        if find_pair(xmas_ns[:window_size], num_to_validate):
+        if day1.find_pair(xmas_ns[:window_size], num_to_validate):
             return find_invalid_number(xmas_ns[1:], window_size)
         else:
             return num_to_validate
