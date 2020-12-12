@@ -36,19 +36,19 @@ def apply_seating_rules_p1(seat_layout: SeatLayout, row: int, col: int) -> Posit
     else:
         return pos
 
-def count_nearby_occupied_seats(seat_layout: SeatLayout, center_row: int, center_col: int) -> int:
-    count = 0
-
+def get_nearby_seats(seat_layout: SeatLayout, center_row: int, center_col: int) -> Iterator[Position]:
     for row in yield_axis_var(center_row, len(seat_layout), radius = 1):
         seat_line = seat_layout[row]
 
         for col in yield_axis_var(center_col, len(seat_line), radius = 1):
             if col == center_col and row == center_row:
                 continue
-            if seat_line[col] == Position.OCCUPIED_SEAT:
-                count += 1
+            else:
+                yield seat_line[col]
 
-    return count
+def count_nearby_occupied_seats(seat_layout: SeatLayout, center_row: int, center_col: int) -> int:
+    nearby_seats = list(get_nearby_seats(seat_layout, center_row, center_col))
+    return nearby_seats.count(Position.OCCUPIED_SEAT)
 
 def apply_seating_rules_p2(seat_layout: SeatLayout, row: int, col: int) -> Position:
     visible_occupied_seats = count_visible_occupied_seats(seat_layout, row, col)
