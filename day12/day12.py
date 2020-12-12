@@ -60,22 +60,20 @@ class Instruction:
         x, y, dir = curr_state
 
         if self.action == Action.MOVE_NORTH:
-            return (x, y + self.arg, dir)
-        if self.action == Action.MOVE_SOUTH:
-            return (x, y - self.arg, dir)
-        if self.action == Action.MOVE_EAST:
-            return (x + self.arg, y, dir)
-        if self.action == Action.MOVE_WEST:
-            return (x - self.arg, y, dir)
-        if self.action == Action.TURN_LEFT:
-            n_times = int(self.arg / 90)
-            new_dir = reduce(lambda d, _: d.rotate_left(), range(n_times), dir)
-            return (x, y, new_dir)
-        if self.action == Action.TURN_RIGHT:
-            n_times = int(self.arg / 90)
-            new_dir = reduce(lambda d, _: d.rotate_right(), range(n_times), dir)
-            return (x, y, new_dir)
-        if self.action == Action.MOVE_FORWARD:
+            y += self.arg
+        elif self.action == Action.MOVE_SOUTH:
+            y -= self.arg
+        elif self.action == Action.MOVE_EAST:
+            x += self.arg
+        elif self.action == Action.MOVE_WEST:
+            x -= self.arg
+        elif self.action == Action.TURN_LEFT:
+            n_times = self.arg // 90
+            dir = reduce(lambda d, _: d.rotate_left(), range(n_times), dir)
+        elif self.action == Action.TURN_RIGHT:
+            n_times = self.arg // 90
+            dir = reduce(lambda d, _: d.rotate_right(), range(n_times), dir)
+        elif self.action == Action.MOVE_FORWARD:
             dir_to_action = {
                 Direction.NORTH: Action.MOVE_NORTH,
                 Direction.SOUTH: Action.MOVE_SOUTH,
@@ -83,32 +81,35 @@ class Instruction:
                 Direction.WEST: Action.MOVE_WEST
             }
             return Instruction(dir_to_action[dir], self.arg).execute((x, y, dir))
-        
-        raise NotImplementedError(f'Not implemented for {self.action}')
+        else:
+            raise NotImplementedError(f'Not implemented for {self.action}')
+
+        return (x, y, dir)
 
     def execute_v2(self, curr_state: ShipState_v2) -> ShipState_v2:
         x, y, wp_dx, wp_dy = curr_state
 
         if self.action == Action.MOVE_NORTH:
-            return (x, y, wp_dx, wp_dy + self.arg)
-        if self.action == Action.MOVE_SOUTH:
-            return (x, y, wp_dx, wp_dy - self.arg)
-        if self.action == Action.MOVE_EAST:
-            return (x, y, wp_dx + self.arg, wp_dy)
-        if self.action == Action.MOVE_WEST:
-            return (x, y, wp_dx - self.arg, wp_dy)
-        if self.action == Action.TURN_LEFT:
-            n_times = int(self.arg / 90)
-            new_wp_dx, new_wp_dy = reduce(lambda xy, _: (-xy[1], xy[0]), range(n_times), (wp_dx, wp_dy))
-            return (x, y, new_wp_dx, new_wp_dy)
-        if self.action == Action.TURN_RIGHT:
-            n_times = int(self.arg / 90)
-            new_wp_dx, new_wp_dy = reduce(lambda xy, _: (xy[1], -xy[0]), range(n_times), (wp_dx, wp_dy))
-            return (x, y, new_wp_dx, new_wp_dy)
-        if self.action == Action.MOVE_FORWARD:
-            return (x + wp_dx * self.arg, y + wp_dy * self.arg, wp_dx, wp_dy)
-        
-        raise NotImplementedError(f'Not implemented for {self.action}')
+            wp_dy += self.arg
+        elif self.action == Action.MOVE_SOUTH:
+            wp_dy -= self.arg
+        elif self.action == Action.MOVE_EAST:
+            wp_dx += self.arg
+        elif self.action == Action.MOVE_WEST:
+            wp_dx -= self.arg
+        elif self.action == Action.TURN_LEFT:
+            n_times = self.arg // 90
+            wp_dx, wp_dy = reduce(lambda xy, _: (-xy[1], xy[0]), range(n_times), (wp_dx, wp_dy))
+        elif self.action == Action.TURN_RIGHT:
+            n_times = self.arg // 90
+            wp_dx, wp_dy = reduce(lambda xy, _: (xy[1], -xy[0]), range(n_times), (wp_dx, wp_dy))
+        elif self.action == Action.MOVE_FORWARD:
+            x += wp_dx * self.arg
+            y += wp_dy * self.arg
+        else:
+            raise NotImplementedError(f'Not implemented for {self.action}')
+
+        return (x, y, wp_dx, wp_dy)
 
 
 def parse_instructions(input_file: str) -> list[Instruction]:
