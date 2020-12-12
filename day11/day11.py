@@ -96,20 +96,6 @@ def yield_axis_var(center: int, limit: int, radius: int) -> Iterator[int]:
     if center + radius < limit:
         yield center + radius
 
-# unused
-def yield_cardinal_coords(center_row: int, center_col: int, total_rows: int, total_cols: int, radius: int = 1) -> Iterator[tuple[int, int]]:
-    yielded_any = False
-    for row in yield_axis_var(center_row, total_rows, radius):
-        for col in yield_axis_var(center_col, total_cols, radius):
-            if col == center_col and row == center_row:
-                continue
-
-            yielded_any = True
-            yield (row, col)
-
-    if yielded_any:
-        yield from yield_cardinal_coords(center_row, center_col, max_row, max_col, radius + 1)
-
 def simulate_seating_round(seat_layout: SeatLayout, apply_rules_fn: ApplySeatingRulesFn) -> SeatLayout:
     return [
         [
