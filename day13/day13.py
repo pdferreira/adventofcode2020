@@ -99,7 +99,7 @@ def get_earliest_sequence_departure_v2(bus_ids: list[int | None]) -> Optional[in
         else:
             print('Restarting at time', t, 'after going through all the buses')
 
-def get_earliest_sequence_departure_v3(bus_ids: list[int | None]) -> Optional[int]:
+def get_earliest_sequence_departure(bus_ids: list[int | None]) -> Optional[int]:
     '''
     Same as v2, but use the bus with higher frequency as the base to try to speed up the cycles
     Still too slow for real input, though.
@@ -132,67 +132,6 @@ def get_earliest_sequence_departure_v3(bus_ids: list[int | None]) -> Optional[in
         if not requires_recheck:
             return t - hidx
         # else:
-            # print('Restarting at time', t, 'after going through all the buses')
-
-
-def get_earliest_sequence_departure(bus_ids: list[int|None]) -> Optional[int]:
-    '''
-    Same as v2, but use the bus with higher frequency as the base to try to speed up the cycles
-    Still too slow for real input, though.
-    '''
-    indexed_bus_ids = list((idx, bus_id) for idx, bus_id in enumerate(bus_ids) if bus_id is not None)
-    inv_sort_bus_ids = sorted(indexed_bus_ids, key = lambda pair: -pair[1])
-    print(inv_sort_bus_ids)
-
-    hidx, highest_freq_bus = inv_sort_bus_ids[0]
-    print('Using bus', highest_freq_bus, 'as pivot, with schedule at t +', hidx)
-    
-    # pattern will repeat at the least common multiple of all numbers, so not worth checking that far
-    gcd_bus_ids = gcd(*(id for _, id in indexed_bus_ids))
-    lcm_bus_ids = reduce(lambda a, b: a * b[1], indexed_bus_ids, 1) // gcd_bus_ids
-    print('gcd:', gcd_bus_ids, 'lcm:', lcm_bus_ids)
-
-    shifted_bus_ids = list((idx - hidx, bus_id) for idx, bus_id in inv_sort_bus_ids[1:])
-    n = highest_freq_bus
-    t = n
-    # cache = { }
-    while t < lcm_bus_ids:
-        # requires_recheck = False
-        max_wait_time = max(calc_waiting_time(t + idx, id) for idx, id in shifted_bus_ids)
-        if max_wait_time > 0:
-            min_next_t = t + max_wait_time
-            t = min_next_t + calc_waiting_time(min_next_t, n)
-        else:
-            return t - hidx
-        # for idx, id in shifted_bus_ids:
-        #     waiting_time = calc_waiting_time(t + idx, id)
-        #     if waiting_time > 0:
-        #         requires_recheck = True
-        #         if id in cache and waiting_time in cache[id]:
-        #             t += cache[id][waiting_time]
-        #         else:
-        #             first_waiting_time = waiting_time
-        #             first_t = t
-
-        #             # if the schedule does not match, let's find the next 't' where it does match
-        #             # and continue, but mark that we need to recheck from the start 
-        #             while waiting_time > 0:
-        #                 # if the schedule does not match, when does the next bus 'id' leave?
-        #                 min_next_t_for_id = t + waiting_time
-        #                 # knowing that, when is the next departure from the first bus from then on?
-        #                 t = min_next_t_for_id + calc_waiting_time(min_next_t_for_id, n)
-        #                 # at that time, does the schedule of bus 'id' match?
-        #                 waiting_time = calc_waiting_time(t + idx, id)
-
-        #             if id not in cache:
-        #                 cache[id] = { }
-        #             cache[id][first_waiting_time] = t - first_t
-
-        #         # print('Jumping to time', t, 'compatible with bus ', id, 'leaving +', idx, 'minutes after the initial bus')
-        
-        # if not requires_recheck:
-        #     return t - hidx
-        # # else:
             # print('Restarting at time', t, 'after going through all the buses')
 
 def solve(input_file: str) -> None:
