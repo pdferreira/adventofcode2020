@@ -1,6 +1,6 @@
 from __future__ import annotations
 from os import path
-from typing import Iterator, Optional
+from typing import Optional
 from itertools import chain
 from functools import reduce
 import re
@@ -71,7 +71,7 @@ def get_fields_in_ticket_order(fields: list[Field], tickets: list[Ticket]) -> li
             if any(not f.validate(t[i]) for t in valid_tickets):
                 possible_positions[f].remove(i)
 
-    # try to assign each field one position, starting by those we 1 option
+    # try to assign each field one position, starting by those with 1 option
     sorted_by_possibilities = sorted(possible_positions.items(), key = lambda item: len(item[1]))
     final_positions = dict[Field, int]()
 
