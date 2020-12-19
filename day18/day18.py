@@ -1,9 +1,6 @@
 from __future__ import annotations
 from os import path
 from typing import Optional
-from functools import reduce
-from dataclasses import dataclass
-from collections import deque
 import time
 import re
 
@@ -57,6 +54,7 @@ def evaluate_rec(tokens: list[str], num_parens: int = 0, acc_value: Optional[int
         
         return v, next_ts, remaining_parens
     elif t == ')':
+        assert acc_value is not None
         return acc_value, ts, num_parens - 1
     else:
         raise NotImplementedError()
@@ -93,6 +91,7 @@ def evaluate_rec_v2(tokens: list[str], num_parens: int = 0, acc_value: Optional[
         
         return v, next_ts, remaining_parens
     elif t == ')':
+        assert acc_value is not None
         return acc_value, ts, num_parens - 1
     else:
         raise NotImplementedError()
@@ -105,8 +104,8 @@ def solve(input_file: str, *, expected: tuple[Optional[int], Optional[int]] = (N
 
     # Part 1
     start_p1 = time.time_ns()
-    for e in exprs:
-        print(e, '=', evaluate(e))
+    # for e in exprs:
+    #     print(e, '=', evaluate(e))
 
     obtained_p1 = sum(map(evaluate, exprs))
 
@@ -116,8 +115,8 @@ def solve(input_file: str, *, expected: tuple[Optional[int], Optional[int]] = (N
 
     # Part 2
     start_p2 = time.time_ns()
-    for e in exprs:
-        print(e, '=', evaluate_p2(e))
+    # for e in exprs:
+    #     print(e, '=', evaluate_p2(e))
 
     obtained_p2 = sum(map(evaluate_p2, exprs))
 
