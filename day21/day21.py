@@ -1,7 +1,7 @@
 from __future__ import annotations
 from os import path
 from itertools import chain
-from typing import Optional
+from typing import Callable, Optional
 from dataclasses import dataclass
 import time
 import re
@@ -67,27 +67,29 @@ def solve(input_file: str, *, expected: tuple[Optional[int], Optional[str]] = (N
     print(f'[{input_file}]')
     full_path = path.join(path.dirname(__file__), input_file)
 
+    # Common
+    start_common = time.time_ns()
     foods = parse_foods(full_path)
-    print(foods)
-
     allergen_map = map_allergens_to_ingredients(foods)
+    time_common = time.time_ns() - start_common
     print(allergen_map)
-
-    ingredients_with_allergens = set(chain(*allergen_map.values()))
 
     # Part 1
     start_p1 = time.time_ns()
+    ingredients_with_allergens = set(chain(*allergen_map.values()))
     obtained_p1 = sum(len(f.ingredients - ingredients_with_allergens) for f in foods)
+    time_p1 = (time.time_ns() - start_p1) + time_common
 
-    print('Part 1 answer:', obtained_p1, '(took', time.time_ns() - start_p1, 'ns)')
+    print('Part 1 answer:', obtained_p1, '(took', time_p1, 'ns)')
     if expected[0] is not None and expected[0] != obtained_p1:
         print('Expected:', expected[0])
 
     # Part 2
     start_p2 = time.time_ns()
     obtained_p2 = ','.join(list(allergen_map[allergen])[0] for allergen in sorted(allergen_map.keys()))
+    time_p2 = (time.time_ns() - start_p2) + time_common
 
-    print('Part 2 answer:', obtained_p2, '(took', time.time_ns() - start_p2, 'ns)')
+    print('Part 2 answer:', obtained_p2, '(took', time_p2, 'ns)')
     if expected[1] is not None and expected[1] != obtained_p2:
         print('Expected:', expected[1])
 
